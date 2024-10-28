@@ -33,6 +33,7 @@ def one():
 
     print(newtext)
 
+
 def two():
     print('two')
 
@@ -58,14 +59,23 @@ def two():
 
     newtext = text
 
-    # заменяем
-    for j in range(0, len(newtext) - 1):
-       for i in range(0, 30):
-            if (text[j] == finaltextarray.letter1[i]) and (text[j + 1] == finaltextarray.letter2[i]):
-                newtext = newtext[:j] + farray.letter1[i] + newtext[j+1:]
-                newtext = newtext[:j+1] + farray.letter2[i] + newtext[j + 2:]
+    newtextl = list(newtext)
+    newtextdf = pd.DataFrame(newtextl, columns=['letter'])
+    newtextdf['chflag'] = 0
 
+    # заменяем
+    for j in range(0, len(newtextdf) - 1):
+        for i in range(0, len(farray)):
+            if (newtextdf.letter[j] == finaltextarray.letter1[i]) and (newtextdf.letter[j + 1] == finaltextarray.letter2[i]) and ((newtextdf.chflag[j] == 0) and (newtextdf.chflag[j+1] == 0)):
+                newtextdf.loc[j, 'letter'] = farray.letter1[i]
+                newtextdf.loc[j, 'chflag'] = 1
+                newtextdf.loc[j + 1, 'letter'] = farray.letter2[i]
+                newtextdf.loc[j + 1, 'chflag'] = 1
+
+    newtextl = newtextdf['letter'].values.tolist()
+    newtext = ''.join(newtextl)
     print(newtext)
+
 
 if __name__ == "__main__":  # основная функция
     print('\n')
